@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        table{
+            border-collapse: collapse;
+        }
+        td{
+            height: 35px;
+            width: 35px;
+            border: 1px solid black;
+            text-align: center;
+        }
+        input{
+            width: 40px;
+            height: 40px;
+            font-size: 22px;
+        }
+        .box{
+            height: 550px;
+            width: 700px;
+            margin-top: 50px;
+            margin-left: 50px;
+            position: relative;
+            -webkit-transform: rotate3d(1,1,0,45deg);
+            -moz-transform: rotate3d(1,1,0,45deg);
+            -ms-transform: rotate3d(1,1,0,45deg);
+            -o-transform: rotate3d(1,1,0,45deg);
+            transform: rotate3d(1,1,0,45deg);
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+        }
+        .box > div{
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            left: 300px;
+            top: 100px;
+            text-align: center;
+        }
+        .page1{
+            background-color: rgba(255,0,0,.4);
+            -webkit-transform: translateZ(100px);
+            -moz-transform: translateZ(100px);
+            -ms-transform: translateZ(100px);
+            -o-transform: translateZ(100px);
+            transform: translateZ(100px);
+        }
+        .page2{
+            background-color: rgba(255,192,203,.3);
+            -webkit-transform: translateZ(-100px);
+            -moz-transform: translateZ(-100px);
+            -ms-transform: translateZ(-100px);
+            -o-transform: translateZ(-100px);
+            transform: translateZ(-100px);
+        }
+        .page3{
+            background-color: rgba(0,0,255,.3);
+            -webkit-transform: translateY(-100px) rotateX(-90deg);
+            -moz-transform: translateY(-100px) rotateX(-90deg);
+            -ms-transform: translateY(-100px) rotateX(-90deg);
+            -o-transform: translateY(-100px) rotateX(-90deg);
+            transform: translateY(-100px) rotateX(-90deg);
+        }
+        .page4{
+            background-color: rgba(128,128,128,.3);
+            -webkit-transform: translateY(100px) rotateX(-90deg);
+            -moz-transform: translateY(100px) rotateX(-90deg);
+            -ms-transform: translateY(100px) rotateX(-90deg);
+            -o-transform: translateY(100px) rotateX(-90deg);
+            transform: translateY(100px) rotateX(-90deg);
+        }
+        .page5{
+            background-color: rgba(0,128,0,.3);
+            -webkit-transform: translateX(-100px) rotateY(-90deg);
+            -moz-transform: translateX(-100px) rotateY(-90deg);
+            -ms-transform: translateX(-100px) rotateY(-90deg);
+            -o-transform: translateX(-100px) rotateY(-90deg);
+            transform: translateX(-100px) rotateY(-90deg);
+        }
+        .page6{
+            background-color: rgba(70, 206, 139, 0.3);
+            -webkit-transform: translateX(100px) rotateY(90deg);
+            -moz-transform: translateX(100px) rotateY(90deg);
+            -ms-transform: translateX(100px) rotateY(90deg);
+            -o-transform: translateX(100px) rotateY(90deg);
+            transform: translateX(100px) rotateY(90deg);
+        }
+        .number{
+            background-color: grey;
+            margin: 20px 100px;
+        }
+        .box{
+            background-color: rgba(128,128,128,.3);
+        }
+        .btn{
+            position: absolute;
+            top: 100px;
+            right: 100px;
+            width: 300px;
+            height: 400px;
+            font-size: 22px;
+            background-color: grey;
+        }
+    </style>
+</head>
+<body>
+<div class="box" id="box">
+    <div class="page1">page1</div>
+    <div class="page2">page2</div>
+    <div class="page3">page3</div>
+    <div class="page4">page4</div>
+    <div class="page5">page5</div>
+    <div class="page6">page6</div>
+</div>
+<div class="number">
+    <p><strong>Page1</strong>:</p><br />
+</div>
+<div class="btn">
+    <span>Change along the X axis<br />(沿X轴变化)<br /></span>
+    <input type="button" id="x1" value="+"/>
+    <input type="button" id="x2" value="-"/>
+    <input type="button" id="x3" value="↻"/>
+    <input type="button" id="x4" value="↺"/>
+    <br />
+    <span>Change along the Y axis<br />(沿Y轴变化)<br /></span>
+    <input type="button" id="y1" value="+"/>
+    <input type="button" id="y2" value="-"/>
+    <input type="button" id="y3" value="↻"/>
+    <input type="button" id="y4" value="↺"/>
+    <br />
+    <span>Change along the Z axis<br />(沿Z轴变化)<br /></span>
+    <input type="button" id="z1" value="+"/>
+    <input type="button" id="z2" value="-"/>
+    <input type="button" id="z3" value="↻"/>
+    <input type="button" id="z4" value="↺"/>
+    <br />
+    
+</div>
+<script>
+    //获取page1页面的matrix3d属性 返回数组形式
+    function getPage1PropertyValueMatrix() {
+        var page = document.querySelector(".page1");
+        var pagestyle = window.getComputedStyle(page,null);
+        var pagePropertyValue = pagestyle.getPropertyValue("-webkit-transform") ||
+            pagestyle.getPropertyValue("-moz-transform") ||
+            pagestyle.getPropertyValue("-ms-transform") ||
+            pagestyle.getPropertyValue("-o-transform") ||
+            pagestyle.getPropertyValue("transform") ||
+            "FAIL";
+        var matrixArr = pagePropertyValue.toString().substr(9,pagePropertyValue.length-10).split(',');
+        return matrixArr
+    }
+
+    //用来刷新页面
+    function getData() {
+        var number = document.querySelector(".number");
+        if (document.getElementById("table")){
+            number.removeChild(document.getElementById("table"));
+        }
+        if(document.getElementById("matrixValue")){
+            number.removeChild(document.getElementById("matrixValue"));
+        }
+
+        //渲染出matrix3d全属性到屏幕
+        var matrixArr = getPage1PropertyValueMatrix();
+        var matrixValue = document.createElement("p");
+        matrixValue.id = "matrixValue"
+        matrixValue.innerHTML = 'matrix3d('+matrixArr.join(',') +')';
+        number.appendChild(matrixValue);
+
+
+        //提取数据创建矩阵
+        var table = document.createElement("table");
+        table.id = "table";
+        number.appendChild(table);
+        for (var i=0;i<matrixArr.length;i++){
+            if (i%4 == 0 ){
+                var tr = document.createElement("tr");
+                table.appendChild(tr);
+            }
+            var td = document.createElement("td");
+            td.innerHTML = matrixArr[i];
+            tr.appendChild(td);
+
+        }
+
+    }
+    function givePage1Transform(action){
+        document.querySelector(".page1").style.transform = action;
+    }
+    getData();
+    var radValueX = 0,
+        radValueY = 0,
+        radValueZ = 0;
+    //用来为每个按键快速添加事件
+    function myTransform(id,x=0,y=0,z=0,rotx=0,roty=0,rotz=0){
+        document.getElementById(id).onmousedown = function () {
+            myInterval = setInterval(function () {
+                radValueX += rotx;
+                radValueY += roty;
+                radValueZ += rotz;
+                var action = "translateZ(" + (parseInt(z)+ parseInt(getPage1PropertyValueMatrix()[14])) +"px) "
+                            + "translateY(" + (parseInt(y)+ parseInt(getPage1PropertyValueMatrix()[13])) +"px) "
+                            +"translateX(" + (parseInt(x)+ parseInt(getPage1PropertyValueMatrix()[12])) +"px) "
+                            +"rotateX(" + (radValueX) +"rad) "
+                            +"rotateY(" + (radValueY) +"rad) "
+                            +"rotateZ(" + (radValueZ) +"rad) ";
+                givePage1Transform(action);
+                getData();
+                console.log(action);
+                // console.log(Math.round(Math.acos(parseFloat(getPage1PropertyValueMatrix()[5]))*100)/100);
+            },25)
+        }
+        document.body.onmouseup = function () {
+            clearInterval(myInterval);
+        }
+
+    }
+
+
+    myTransform("z1",0,0,6);
+    myTransform("z2",0,0,-6);
+    myTransform("x1",6,0,0);
+    myTransform("x2",-6,0,0);
+    myTransform("y1",0,6,0);
+    myTransform("y2",0,-6,0);
+    myTransform("x3",0,0,0,0.05);
+    myTransform("x4",0,0,0,-0.05);
+    myTransform("y3",0,0,0,0,0.05);
+    myTransform("y4",0,0,0,0,-0.05);
+    myTransform("z3",0,0,0,0,0,0.05);
+    myTransform("z4",0,0,0,0,0,-0.05);
+
+
+
+
+</script>
+</body>
+</html>
